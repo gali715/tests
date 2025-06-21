@@ -1,0 +1,6 @@
+ HEAD
+**/.idea/
+**/cmake-build-debug/
+
+.idea/
+ 1993421 (Ignore IDE & build folders)
