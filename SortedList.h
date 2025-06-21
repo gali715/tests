@@ -26,6 +26,7 @@ namespace mtm {
             if (n.head == nullptr) {
                 return;
             }
+            try{
             Node* copy = n.head->next; // their list
             this->head = new Node(n.head->data);
             Node* temp = this->head; // my list starts from head
@@ -36,22 +37,21 @@ namespace mtm {
                 copy = copy->next;
                ++this->size;
             }
+            }catch(...){
+              clear();
+              throw;
+            }
         }
 
         ~SortedList()  {
-            Node* currPtr = this->head;
-            while (currPtr != nullptr) {
-                Node* next = currPtr->next;
-                delete currPtr;
-                currPtr = next;
-            }
-            this->size = 0;
+           clear();
         }
 
         SortedList& operator=(const SortedList& list) {
             if (this == &list) {
                 return *this;
             }
+
             Node* currPtr = this->head;
             while (currPtr != nullptr) {
                 Node* next = currPtr->next; // point to the first chain
@@ -64,18 +64,31 @@ namespace mtm {
             if (list.head == nullptr) {
                 return *this;
             }
-            this->size = list.size;
-            Node* copy = list.head->next; // their list
-            Node* temp = new Node(list.head->data); // my list starts from head
-            this->head = temp;
-            while (copy){
+
+            	this->size = list.size;
+            	Node* copy = list.head->next; // their list
+            	Node* temp = new Node(list.head->data); // my list starts from head
+            	this->head = temp;
+            try{
+                while (copy){
                 temp->next = new Node(copy->data);
                 temp = temp->next;
                 copy = copy->next;
-            }
-
+            	}
+			}catch(...){
+  				while (copy){
+                Node* next = copy->next;
+                delete copy;
+                copy = next;
+            	}
+            throw;
+			}
             return *this;
-        }
+    }
+
+
+
+
         Node* GetHead() const {
             return this->head;
         }
@@ -127,6 +140,21 @@ namespace mtm {
 
             ++this->size;
         }
+
+
+    void clear()
+    {
+        Node* p = head;
+        while (p) {
+            Node* next = p->next;
+            delete p;
+            p = next;
+        }
+        head = nullptr;
+        size = 0;
+    }
+
+
 /*
         void remove(const ConstIterator& it) {
             Node* del = it.GetNode();;
